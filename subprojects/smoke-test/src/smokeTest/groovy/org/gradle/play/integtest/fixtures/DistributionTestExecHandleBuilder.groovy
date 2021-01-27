@@ -67,20 +67,6 @@ class DistributionTestExecHandleBuilder {
             this.errorOutput = errorOutput
         }
 
-        void shutdown(int port) {
-            try {
-                stop(port)
-                waitForFinish()
-            } finally {
-                try {
-                    abort()
-                } catch (IllegalStateException e) {
-                    // Ignore if process is already not running
-                    println "Did not abort play process since current state is: ${state.toString()}"
-                }
-            }
-        }
-
         private stop(int port) {
             try {
                 new URL("http://localhost:${port}/shutdown").bytes

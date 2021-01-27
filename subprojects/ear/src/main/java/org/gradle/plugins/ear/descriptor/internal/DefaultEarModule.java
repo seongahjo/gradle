@@ -17,7 +17,7 @@ package org.gradle.plugins.ear.descriptor.internal;
 
 import com.google.common.base.Objects;
 import groovy.util.Node;
-import groovy.xml.QName;
+import groovy.namespace.QName;
 import org.apache.commons.lang.StringUtils;
 import org.gradle.plugins.ear.descriptor.EarModule;
 

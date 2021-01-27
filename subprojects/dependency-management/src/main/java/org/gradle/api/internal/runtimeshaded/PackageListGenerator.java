@@ -59,6 +59,8 @@ public class PackageListGenerator extends DefaultTask {
         "groovyjarjarantlr",
         "net/rubygrapefruit",
         "org/codehaus/groovy",
+        "org/apache/groovy",
+        "org/apache/groovy",
         "org/apache/tools/ant",
         "org/apache/commons/logging",
         "org/slf4j",
@@ -114,6 +116,7 @@ public class PackageListGenerator extends DefaultTask {
             @Override
             public void doExecute(final BufferedWriter bufferedWriter) throws Exception {
                 Trie packages = collectPackages();
+                System.out.println("packages = " + packages);
                 packages.dump(false, new ErroringAction<String>() {
                     @Override
                     public void doExecute(String s) throws Exception {
@@ -183,6 +186,7 @@ public class PackageListGenerator extends DefaultTask {
         if (endIndex > 0) {
             String packageName = zipEntry.getName().substring(0, endIndex);
             for (String exclude : getExcludes()) {
+                builder.addWord("X" + packageName);
                 if ((packageName + "/").startsWith(exclude + "/")) {
                     return;
                 }

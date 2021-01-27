@@ -405,7 +405,7 @@ public class ExpressionReplacingVisitorSupport extends StatementReplacingVisitor
     }
 
     @Override
-    protected void visitListOfExpressions(List<? extends Expression> exprs) {
+    public void visitListOfExpressions(List<? extends Expression> exprs) {
         throw new UnsupportedOperationException("visitListOfExpressions");
     }
 

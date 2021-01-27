@@ -22,7 +22,6 @@ import groovy.lang.GroovyResourceLoader;
 import groovy.lang.Script;
 import org.codehaus.groovy.ast.ClassNode;
 import org.codehaus.groovy.ast.stmt.Statement;
-import org.codehaus.groovy.classgen.Verifier;
 import org.codehaus.groovy.control.CompilationFailedException;
 import org.codehaus.groovy.control.CompilationUnit;
 import org.codehaus.groovy.control.CompilerConfiguration;
@@ -218,7 +217,7 @@ public class DefaultScriptCompilationHandler implements ScriptCompilationHandler
         }
     }
 
-    private static class PackageStatementDetector extends CompilationUnit.SourceUnitOperation {
+    private static class PackageStatementDetector implements CompilationUnit.ISourceUnitOperation {
         private boolean hasPackageStatement;
 
         @Override
@@ -227,7 +226,7 @@ public class DefaultScriptCompilationHandler implements ScriptCompilationHandler
         }
     }
 
-    private static class EmptyScriptDetector extends CompilationUnit.SourceUnitOperation {
+    private static class EmptyScriptDetector implements CompilationUnit.ISourceUnitOperation {
         private boolean emptyScript;
         private boolean hasMethods;
 
@@ -270,13 +269,7 @@ public class DefaultScriptCompilationHandler implements ScriptCompilationHandler
     private class CustomCompilationUnit extends CompilationUnit {
         public CustomCompilationUnit(CompilerConfiguration compilerConfiguration, CodeSource codeSource, final Action<? super ClassNode> customVerifier, GroovyClassLoader groovyClassLoader) {
             super(compilerConfiguration, codeSource, groovyClassLoader);
-            this.verifier = new Verifier() {
-                @Override
-                public void visitClass(ClassNode node) {
-                    customVerifier.execute(node);
-                    super.visitClass(node);
-                }
-            };
+            setClassgenCallback((classVisitor, node) -> customVerifier.execute(node));
             this.resolveVisitor = new GradleResolveVisitor(this, simpleNameToFQN);
         }
     }
