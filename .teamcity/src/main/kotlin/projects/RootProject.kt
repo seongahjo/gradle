@@ -11,6 +11,7 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.VersionedSet
 import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.versionedSettings
 import model.CIBuildModel
 import model.Stage
+import promotion.PromotionProject
 import java.io.File
 
 class RootProject(
@@ -41,6 +42,8 @@ class RootProject(
         subProject(stageProject)
         prevStage = stage
     }
+
+    subProject(PromotionProject(model.branch))
 
     buildTypesOrder = buildTypes
     subProjectsOrder = subProjects
