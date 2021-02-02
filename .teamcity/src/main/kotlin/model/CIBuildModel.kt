@@ -35,7 +35,7 @@ enum class StageNames(override val stageName: String, override val description: 
 
 data class CIBuildModel(
     val branch: Branch,
-    val projectPrefix: String = "GradleBuildTool_${branch.name}_",
+    val projectPrefix: String = "GradleBuildTool_${if (branch == Branch.Master) "Check" else branch.name}_",
     val publishStatusToGitHub: Boolean = true,
     val buildScanTags: List<String> = emptyList(),
     val stages: List<Stage> = listOf(
