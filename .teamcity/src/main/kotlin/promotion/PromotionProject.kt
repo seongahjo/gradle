@@ -6,7 +6,7 @@ import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.VersionedSet
 import jetbrains.buildServer.configs.kotlin.v2019_2.projectFeatures.versionedSettings
 
 class PromotionProject(branch: Branch) : Project({
-    uuid = "16c9f3e3-36a9-4596-a35c-70a3c7a2c5c8"
+    uuid = "16c9f3e3-36a9-4596-a35c-70a3c7a2c5c8-1"
     id("Promotion")
     name = "Promotion"
 
