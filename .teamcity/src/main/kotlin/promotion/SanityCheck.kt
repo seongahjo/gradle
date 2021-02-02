@@ -23,7 +23,7 @@ object SanityCheck : BuildType({
     description = "Compilation and test execution of buildSrc"
 
     vcs {
-        root(Gradle_Promotion__master_)
+        root(AbsoluteId("GradleBuildTool_GradlePromoteMaster"))
 
         checkoutMode = CheckoutMode.ON_AGENT
         cleanCheckout = true
