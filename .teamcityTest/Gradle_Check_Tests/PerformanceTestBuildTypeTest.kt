@@ -48,9 +48,8 @@ class PerformanceTestBuildTypeTest {
                 functionalTests = listOf(
                     TestCoverage(1, TestType.platform, Os.LINUX, JvmVersion.java8),
                     TestCoverage(2, TestType.platform, Os.WINDOWS, JvmVersion.java11, vendor = JvmVendor.openjdk)),
-                performanceTests = listOf(PerformanceTestCoverage(1, PerformanceTestType.test, Os.LINUX)),
-                omitsSlowProjects = true),
-            PerformanceTestCoverage(1, PerformanceTestType.test, Os.LINUX),
+                performanceTests = listOf(PerformanceTestCoverage(1, PerformanceTestType.per_commit, Os.LINUX))),
+            PerformanceTestCoverage(1, PerformanceTestType.per_commit, Os.LINUX),
             "Description",
             "performance",
             listOf("largeTestProject", "smallTestProject"),
@@ -66,7 +65,10 @@ class PerformanceTestBuildTypeTest {
 
         val expectedRunnerParams = listOf(
             "-PperformanceBaselines=%performance.baselines%",
-            "\"-PtestJavaHome=%linux.java8.oracle.64bit%\"",
+            "-PtestJavaVersion=8",
+            "-PtestJavaVendor=oracle",
+            "-Porg.gradle.java.installations.auto-download=false",
+            "\"-Porg.gradle.java.installations.paths=%linux.java8.oracle.64bit%,%linux.java9.oracle.64bit%,%linux.java10.oracle.64bit%,%linux.java11.openjdk.64bit%,%linux.java12.openjdk.64bit%,%linux.java13.openjdk.64bit%,%linux.java14.openjdk.64bit%,%linux.java15.openjdk.64bit%,%linux.java16.openjdk.64bit%\"",
             "\"-Porg.gradle.performance.branchName=%teamcity.build.branch%\"",
             "\"-Porg.gradle.performance.db.url=%performance.db.url%\"",
             "\"-Porg.gradle.performance.db.username=%performance.db.username%\"",
@@ -74,7 +76,7 @@ class PerformanceTestBuildTypeTest {
             "-PmaxParallelForks=%maxParallelForks%",
             "-s",
             "--daemon",
-            "",
+            "--continue",
             "\"-Dscan.tag.PerformanceTest\""
         )
 

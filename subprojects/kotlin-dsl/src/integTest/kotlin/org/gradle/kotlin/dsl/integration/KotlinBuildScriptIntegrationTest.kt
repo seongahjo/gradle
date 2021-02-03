@@ -1,17 +1,17 @@
 package org.gradle.kotlin.dsl.integration
 
 import org.gradle.integtests.fixtures.ToBeFixedForConfigurationCache
-import org.gradle.test.fixtures.file.LeaksFileHandles
 
 import org.gradle.kotlin.dsl.fixtures.AbstractKotlinIntegrationTest
 import org.gradle.kotlin.dsl.fixtures.containsMultiLineString
-import org.gradle.kotlin.dsl.fixtures.equalToMultiLineString
+
+import org.gradle.test.fixtures.file.LeaksFileHandles
 
 import org.hamcrest.CoreMatchers.allOf
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.equalTo
-
 import org.hamcrest.MatcherAssert.assertThat
+
 import org.junit.Test
 
 import java.io.StringWriter
@@ -137,6 +137,32 @@ class KotlinBuildScriptIntegrationTest : AbstractKotlinIntegrationTest() {
     }
 
     @Test
+    @ToBeFixedForConfigurationCache
+    fun `can use Kotlin 1 dot 4 language features`() {
+
+        withBuildScript(
+            """
+
+            val myList = listOf(
+                "foo",
+                "bar", // trailing comma
+            )
+
+            task("test") {
+                doLast {
+                    print(myList)
+                }
+            }
+            """
+        )
+
+        assertThat(
+            build("test", "-q").output,
+            equalTo("[foo, bar]")
+        )
+    }
+
+    @Test
     fun `use of the plugins block on nested project block fails with reasonable error message`() {
 
         withBuildScript(
@@ -221,7 +247,7 @@ class KotlinBuildScriptIntegrationTest : AbstractKotlinIntegrationTest() {
                     }
                 }
             }
-            """.replaceIndent()
+            """.trimIndent()
         )
 
         assertThat(
@@ -273,12 +299,12 @@ class KotlinBuildScriptIntegrationTest : AbstractKotlinIntegrationTest() {
 
         assertThat(
             build("test", "-q", "-I", initScript.absolutePath).output.trim(),
-            equalToMultiLineString(
+            equalTo(
                 """
                 INIT: foo.txt
                 SETTINGS: foo.txt
                 PROJECT: foo.txt
-                """.replaceIndent()
+                """.trimIndent()
             )
         )
     }

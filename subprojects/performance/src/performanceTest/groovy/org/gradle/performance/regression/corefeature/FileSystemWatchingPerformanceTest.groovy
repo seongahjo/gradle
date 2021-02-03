@@ -22,29 +22,28 @@ import org.gradle.internal.os.OperatingSystem
 import org.gradle.performance.AbstractCrossVersionPerformanceTest
 import org.gradle.performance.annotations.RunFor
 import org.gradle.performance.annotations.Scenario
-import org.gradle.performance.fixture.IncrementalAndroidTestProject
+import org.gradle.performance.fixture.AndroidTestProject
 import org.gradle.performance.fixture.IncrementalTestProject
 import org.gradle.performance.fixture.TestProjects
 import org.gradle.test.fixtures.file.LeaksFileHandles
 import spock.lang.Unroll
 
-import static org.gradle.performance.annotations.ScenarioType.TEST
+import static org.gradle.performance.annotations.ScenarioType.PER_COMMIT
 import static org.gradle.performance.results.OperatingSystem.LINUX
 import static org.gradle.performance.results.OperatingSystem.MAC_OS
 import static org.gradle.performance.results.OperatingSystem.WINDOWS
 
 @Unroll
 @RunFor(
-    @Scenario(type = TEST, operatingSystems = [LINUX, WINDOWS, MAC_OS], testProjects = ["santaTrackerAndroidBuild", "largeJavaMultiProject"])
+    @Scenario(type = PER_COMMIT, operatingSystems = [LINUX, WINDOWS, MAC_OS], testProjects = ["santaTrackerAndroidBuild", "largeJavaMultiProject"])
 )
 @LeaksFileHandles("The TAPI keeps handles to the distribution it starts open in the test JVM")
 class FileSystemWatchingPerformanceTest extends AbstractCrossVersionPerformanceTest {
-    private static final String AGP_TARGET_VERSION = "4.2"
     private static final String KOTLIN_TARGET_VERSION = new KotlinGradlePluginVersions().latests.last()
 
     def setup() {
         runner.minimumBaseVersion = "6.7"
-        runner.targetVersions = ["6.8-20201223103229+0000"]
+        runner.targetVersions = ["7.0-20210122131800+0000"]
         runner.useToolingApi = true
         runner.args = ["--no-build-cache", "--no-scan"]
         if (OperatingSystem.current().windows) {
@@ -88,8 +87,8 @@ class FileSystemWatchingPerformanceTest extends AbstractCrossVersionPerformanceT
 
     IncrementalTestProject findTestProjectAndSetupRunnerForFsWatching(boolean enableConfigurationCaching) {
         IncrementalTestProject testProject = TestProjects.projectFor(runner.testProject)
-        if (testProject instanceof IncrementalAndroidTestProject) {
-            IncrementalAndroidTestProject.configureForLatestAgpVersionOfMinor(runner, AGP_TARGET_VERSION)
+        if (testProject instanceof AndroidTestProject) {
+            AndroidTestProject.useLatestAgpVersion(runner)
             runner.args.add("-D${StartParameterBuildOptions.ConfigurationCacheProblemsOption.PROPERTY_NAME}=warn")
             runner.args.add("-DkotlinVersion=${KOTLIN_TARGET_VERSION}")
         }
